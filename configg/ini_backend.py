@@ -1,22 +1,15 @@
 
+# Library imports
 from typing import Dict, Any
 import configparser
 from multiprocessing import Lock
 
-
-class Backend:
-
-    def __init__(self, path: str):
-        self.path = path
-
-    def read(self) -> Dict[str, Any]:
-        raise NotImplementedError
-
-    def write(self, wr_dict: Dict[str, Any]) -> None:
-        raise NotImplementedError
+# Project imports
+from configg.backend import Backend
 
 
 class IniBackend(Backend):
+    """ ini file backend for configg """
 
     def __init__(self, path: str):
         super().__init__(path)
@@ -28,7 +21,7 @@ class IniBackend(Backend):
         data = {}
         for section_name, section_dict in parser._sections.items():
             data[section_name] = section_dict
-        return data
+        return self._strip_quotes(data)
 
     def write(self, data: Dict[str, Any]) -> None:
         self.lock.acquire(False)
