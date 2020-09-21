@@ -1,4 +1,4 @@
-name: unittest
+name: coverage
 on: [push]
 jobs:
   test:
@@ -15,4 +15,4 @@ jobs:
         pip install -r requirements.txt
     - name: Build and publish
       run: |
-        python test.py
+        python do_coverage.py
