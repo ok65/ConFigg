@@ -33,6 +33,9 @@ cfg = Configg("myconfig.ini")
 # Pull data from user section
 username = cfg.user["username"]
 
+# Add data to the user section
+cfg.user["token"] = "apples"
+
 # Pull data from the database section
 db_ip = cfg.database["ip"]
 
