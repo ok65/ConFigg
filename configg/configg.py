@@ -1,7 +1,7 @@
 
 # Library imports
 from __future__ import annotations
-from typing import TYPE_CHECKING, Optional, Dict, Any
+from typing import TYPE_CHECKING, Optional, Dict, Any, List
 
 # Type check imports
 if TYPE_CHECKING:
@@ -37,6 +37,11 @@ class Configg:
         self._sections = {}
         self.reload()
 
+    @property
+    def sections(self) -> List[str]:
+        """ :return: List of section names """
+        return list(self._sections.keys())
+
     def commit(self) -> None:
         """ Commits current configg data to file """
         self._backend.write(self._sections)
@@ -53,6 +58,13 @@ class Configg:
         """
         self._sections[name] = data or {}
         return SectionView(self, self._sections[name])
+
+    def remove_section(self, name: str) -> None:
+        """
+        Removes section from configg data
+        :param name: Name of section
+        """
+        del self._sections[name]
 
     def __getattr__(self, item) -> SectionView:
         return SectionView(self, self._sections[item])

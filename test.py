@@ -45,6 +45,11 @@ class CommonTests(unittest.TestCase):
         self.config_dict.reload()
         self.assertEqual(self.config_dict.section_two["val5"], "potato")
 
+    def test_addremove_section(self):
+        self.config_dict.add_section("dummy", {"bird": "goose"})
+        self.assertIn("dummy", self.config_dict.sections)
+        self.config_dict.remove_section("dummy")
+        self.assertNotIn("dummy", self.config_dict.sections)
 
 class IniTests(CommonTests):
 
