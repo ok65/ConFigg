@@ -12,4 +12,4 @@ setup(name='configg',
      )
 """
 with open("setup.py", "w+") as fp:
-    fp.write(text.format(version=sys.argv[1]))
+    fp.write(text.format(version=sys.argv[1].split('/')[-1]))
