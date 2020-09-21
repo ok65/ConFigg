@@ -1,8 +1,8 @@
 import sys
 text = """
-from distutils.core import setup
+import setuptools
 
-setup(name='configg',
+setuptools.setup(name='configg',
       version='{version}',
       description='Config data manager',
       author='Oliver',
