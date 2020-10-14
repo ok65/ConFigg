@@ -1,15 +1,18 @@
 
 from typing import Dict, Any
+from abc import ABC, abstractmethod
 
 
-class Backend:
+class Backend(ABC):
 
     def __init__(self, path: str):
         self.path = path
 
+    @abstractmethod
     def read(self) -> Dict[str, Any]:
         raise NotImplementedError
 
+    @abstractmethod
     def write(self, wr_dict: Dict[str, Any]) -> None:
         raise NotImplementedError
 

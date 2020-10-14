@@ -42,6 +42,10 @@ class Configg:
         """ :return: List of section names """
         return list(self._sections.keys())
 
+    def iter_sections(self):
+        """ : return: Generator of Sections """
+        return (getattr(self, section) for section in self.sections)
+
     def commit(self) -> None:
         """ Commits current configg data to file """
         self._backend.write(self._sections)
@@ -57,6 +61,8 @@ class Configg:
         :param data: Dict of data to store in section (if omitted, will create empty section)
         """
         self._sections[name] = data or {}
+        if self.autocommit:
+            self.commit()
         return SectionView(self, self._sections[name])
 
     def remove_section(self, name: str) -> None:
@@ -68,3 +74,5 @@ class Configg:
 
     def __getattr__(self, item) -> SectionView:
         return SectionView(self, self._sections[item])
+
+

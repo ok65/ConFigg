@@ -1,7 +1,7 @@
 
 # Library imports
 from __future__ import annotations
-from typing import Dict, Any, TYPE_CHECKING
+from typing import Dict, Any, TYPE_CHECKING, List, Tuple
 
 # Type check imports
 if TYPE_CHECKING:
@@ -51,6 +51,18 @@ class SectionView:
         :return: key present?
         """
         return key in self._data
+
+    def keys(self) -> List[str]:
+        """ :return: List of dictionary keys """
+        return list(self._data.keys())
+
+    def items(self) -> List[Tuple[str, Any]]:
+        """:return: List of (key, item) tuples """
+        return list(self._data.items())
+
+    def values(self) -> List[Any]:
+        """:return: List of values"""
+        return list(self._data.values())
 
     def commit(self) -> None:
         """ Commits current configg data to file """
