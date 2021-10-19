@@ -13,7 +13,7 @@ from configg.exceptions import *
 
 class SectionView:
 
-    def __init__(self, parent: Configg, data: dict):
+    def __init__(self, parent: Configg, data: dict, defaults: dict):
         for key, value in data.items():
             if type(key) is not str:
                 raise Exception
@@ -21,15 +21,21 @@ class SectionView:
                 raise Exception
         self._parent = parent
         self._data = data
+        self._defaults = defaults
 
     def __getitem__(self, key) -> Any:
         """
         dict operator, provides dict-like access to data
         :param key: key
         :return: Value stored (or subsequent dict)
+        :raises: KeyError if key not present in data or defaults
         """
         if key in self._data:
             return self._data[key]
+        elif key in self._defaults:
+            return self._defaults[key]
+        else:
+            raise KeyError("'{key}' not found in {parent}.{obj}".format(key=key, parent=self._parent, obj=self))
 
     def __setitem__(self, key, value) -> None:
         """
@@ -78,5 +84,9 @@ class SectionView:
 
     def as_dict(self) -> dict:
         """ :return: Return data as pure python dictionary """
-        return self._data
+        return self._data.copy()
+
+    def defaults(self) -> dict:
+        """ :return: Return default values as a pure python dictionary """
+        return self._defaults.copy()
 

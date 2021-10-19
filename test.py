@@ -76,6 +76,11 @@ class CommonTests(unittest.TestCase):
     def test_items(self):
         self.assertSetEqual(set(self.config_dict.section_one.values()), {"Stuff", "apples"})
 
+    def test_defaults(self):
+        self.default_config = self.instance({'defaults':{"default_section": {"bird": "robin"}}})
+        self.assertIn("default_section", self.default_config.sections)
+        self.assertEqual(self.default_config.default_section["bird"], "robin")
+
 class IniTests(CommonTests):
 
 

@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Optional, Dict, Any, List
 
 # Type check imports
 if TYPE_CHECKING:
-    pass
+    from configg.backend import Backend
 
 # Project imports
 from configg.exceptions import *
@@ -22,20 +22,27 @@ class Configg:
             cfg = Configg("configg.ini")
             a = cfg.section_one["val_one"]
     """
-    def __init__(self, path: str, data_backend=None, autocommit=False, readonly=False):
+    def __init__(self, path: str, data_backend: 'Backend' = None, autocommit: bool = False, readonly: bool = False,
+                 defaults: Optional[dict[str, dict]] = None):
         """
         Configg constructor
         :param path: Path to config data file (it doesn't exist, will be created)
         :param data_backend: Backend data format (json, ini, xml etc) - defaults to ini
         :param autocommit: If true, writes to the dict will be written back to the config file
         :param readonly: Prevents modifying the dict if true
+        :param defaults: Default values that will be used if a value isn't found
         """
         data_backend = data_backend or IniBackend
         self._backend = data_backend(path)
         self.readonly = readonly
         self.autocommit = autocommit
         self._sections = {}
+        self._defaults = defaults if defaults else {}
         self.reload()
+        # Make sure there is any empty section for default values if the section doesn't already exist
+        for section, dict in self._defaults.items():
+            if section not in self.sections:
+                self.add_section(section, {})
 
     @property
     def sections(self) -> List[str]:
@@ -63,7 +70,7 @@ class Configg:
         self._sections[name] = data or {}
         if self.autocommit:
             self.commit()
-        return SectionView(self, self._sections[name])
+        return SectionView(self, self._sections[name], defaults=self._defaults)
 
     def remove_section(self, name: str) -> None:
         """
@@ -73,6 +80,6 @@ class Configg:
         del self._sections[name]
 
     def __getattr__(self, item) -> SectionView:
-        return SectionView(self, self._sections[item])
+        return SectionView(self, self._sections[item], self._defaults.get(item, {}))
 
 
